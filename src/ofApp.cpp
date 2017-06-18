@@ -62,6 +62,8 @@ void ofApp::update() {
 	ofBackground(100, 100, 100);
 	
 	kinect.update();
+    
+    
 	
 	// there is a new frame and we are connected
 	if(kinect.isFrameNew()) {
@@ -175,13 +177,18 @@ void ofApp::setupGUI(){
     
     params.setName("Touch Parameters");
     params.add(interactionZoneHeight.set("Zone Height", 50, 1, 500));
+    params.add(zOffset.set("z Offset", 0, -50, 50));
+
+    
+    interactionZoneHeight.addListener(this, &ofApp::updateInteractionZone);
+    zOffset.addListener(this, &ofApp::updateZOffset);
     
     panel.setup(params);
     
     panel.setPosition(10, ofGetHeight() - 200);
+    panel.setDefaultWidth(500);
     
     panel.loadFromFile("settings.xml");
-    
     
 }
 
@@ -253,6 +260,13 @@ void ofApp::drawInteractionZone() {
 //        cout << ofToString(n) << endl;
     }
     
+    ofNoFill();
+    ofDrawBox(topCentroid, 10);
+    ofDrawBox(btmCentroid, 10);
+    
+    ofSetColor(255,255,0);
+    ofDrawBox(baseCentroid, 20);
+    
     ofDisableDepthTest();
     ofPopMatrix();
     ofPopStyle();
@@ -269,6 +283,9 @@ void ofApp::drawPointCloud() {
 		for(int x = 0; x < w; x += step) {
 			if(kinect.getDistanceAt(x, y) > 0) {
 				mesh.addColor(kinect.getColorAt(x,y));
+            
+                if (kinect.getWorldCoordinateAt(x, y).z < topCentroid.z &&
+                    kinect.getWorldCoordinateAt(x, y).z > btmCentroid.z)
 				mesh.addVertex(kinect.getWorldCoordinateAt(x, y));
 			}
 		}
@@ -282,6 +299,164 @@ void ofApp::drawPointCloud() {
 	mesh.drawVertices();
 	ofDisableDepthTest();
 	ofPopMatrix();
+}
+
+//--------------------------------------------------------------
+void ofApp::buildInteractionZone(){
+    
+    // create bottom mesh
+    interactionZone.addVertex(workspace[0]);
+    interactionZone.addVertex(workspace[1]);
+    interactionZone.addVertex(workspace[2]);
+    interactionZone.addVertex(workspace[3]);
+    
+    interactionZone.addIndex(0);
+    interactionZone.addIndex(1);
+    interactionZone.addIndex(2);
+    
+    interactionZone.addIndex(0);
+    interactionZone.addIndex(2);
+    interactionZone.addIndex(3);
+    
+    // set the bottom normals
+    calcNormals(interactionZone, true);
+    
+    // create the top mesh
+    interactionZone.addVertex(workspace[0] + interactionZone.getNormals()[0]); // 4
+    interactionZone.addVertex(workspace[1] + interactionZone.getNormals()[1]); // 5
+    interactionZone.addVertex(workspace[2] + interactionZone.getNormals()[2]); // 6
+    interactionZone.addVertex(workspace[3] + interactionZone.getNormals()[3]); // 7
+    
+    interactionZone.addIndex(4);
+    interactionZone.addIndex(5);
+    interactionZone.addIndex(6);
+    
+    interactionZone.addIndex(4);
+    interactionZone.addIndex(6);
+    interactionZone.addIndex(7);
+    
+    // create left side
+    interactionZone.addIndex(0);
+    interactionZone.addIndex(4);
+    interactionZone.addIndex(5);
+    
+    interactionZone.addIndex(0);
+    interactionZone.addIndex(5);
+    interactionZone.addIndex(1);
+    
+    // create front side
+    interactionZone.addIndex(1);
+    interactionZone.addIndex(5);
+    interactionZone.addIndex(6);
+    
+    interactionZone.addIndex(1);
+    interactionZone.addIndex(6);
+    interactionZone.addIndex(2);
+    
+    // create right side
+    interactionZone.addIndex(2);
+    interactionZone.addIndex(6);
+    interactionZone.addIndex(7);
+    
+    interactionZone.addIndex(2);
+    interactionZone.addIndex(7);
+    interactionZone.addIndex(3);
+    
+    // create rear side
+    interactionZone.addIndex(3);
+    interactionZone.addIndex(7);
+    interactionZone.addIndex(4);
+    
+    interactionZone.addIndex(3);
+    interactionZone.addIndex(4);
+    interactionZone.addIndex(0);
+    
+    
+    // set top and btm centroids
+    btmCentroid = ( interactionZone.getVertices()[0] + interactionZone.getVertices()[1] + interactionZone.getVertices()[2] + interactionZone.getVertices()[3] ) /4;
+    topCentroid = (interactionZone.getVertices()[4] + interactionZone.getVertices()[5] + interactionZone.getVertices()[6] + interactionZone.getVertices()[7])  /4;
+    
+    baseCentroid.set(btmCentroid.x, btmCentroid.y, btmCentroid.z);
+}
+
+//--------------------------------------------------------------------------
+void ofApp::updateInteractionZone(float &height){
+    
+    if (!interactionZone.getVertices().empty()){
+        
+        // update normal length
+        interactionZone.getNormals()[0].scale(1).scale(height);
+        interactionZone.getNormals()[1].scale(1).scale(height);
+        interactionZone.getNormals()[2].scale(1).scale(height);
+        interactionZone.getNormals()[3].scale(1).scale(height);
+        
+        // reset vertices to bottom plane
+        interactionZone.getVertices()[4] = interactionZone.getVertices()[0];
+        interactionZone.getVertices()[5] = interactionZone.getVertices()[1];
+        interactionZone.getVertices()[6] = interactionZone.getVertices()[2];
+        interactionZone.getVertices()[7] = interactionZone.getVertices()[3];
+        
+        // update vertices by new height offset
+        interactionZone.getVertices()[4] += interactionZone.getNormals()[0]; // 4
+        interactionZone.getVertices()[5] += interactionZone.getNormals()[1]; // 5
+        interactionZone.getVertices()[6] += interactionZone.getNormals()[2]; // 6
+        interactionZone.getVertices()[7] += interactionZone.getNormals()[3]; // 7
+        
+        // set top and btm centroids
+        topCentroid = ( interactionZone.getVertices()[0] + interactionZone.getVertices()[1] + interactionZone.getVertices()[2] + interactionZone.getVertices()[3] ) /4;
+        btmCentroid = (interactionZone.getVertices()[4] + interactionZone.getVertices()[5] + interactionZone.getVertices()[6] + interactionZone.getVertices()[7])  /4;
+        
+        
+    }
+    
+}
+
+//--------------------------------------------------------------------------
+void ofApp::updateZOffset(float &offset){
+    
+    if (interactionZone.getVertices().size() > 0){
+        
+        float diff = offset - prevOffset;
+        
+        for (auto &v : interactionZone.getVertices()){
+            v.z += diff;
+        }
+        
+        // set top and btm centroids
+        topCentroid = ( interactionZone.getVertices()[0] + interactionZone.getVertices()[1] + interactionZone.getVertices()[2] + interactionZone.getVertices()[3] ) /4;
+        btmCentroid = (interactionZone.getVertices()[4] + interactionZone.getVertices()[5] + interactionZone.getVertices()[6] + interactionZone.getVertices()[7])  /4;
+        
+        prevOffset=offset;
+
+    }
+
+}
+
+//--------------------------------------------------------------------------
+void ofApp::calcNormals( ofMesh & mesh, bool bNormalize ){
+    
+    for( int i=0; i < mesh.getVertices().size(); i++ ) mesh.addNormal(ofPoint(0,0,0));
+    
+    for( int i=0; i < mesh.getIndices().size(); i+=3 ){
+        const int ia = mesh.getIndices()[i];
+        const int ib = mesh.getIndices()[i+1];
+        const int ic = mesh.getIndices()[i+2];
+        
+        ofVec3f e1 = mesh.getVertices()[ia] - mesh.getVertices()[ib];
+        ofVec3f e2 = mesh.getVertices()[ic] - mesh.getVertices()[ib];
+        ofVec3f no = e2.cross( e1 );
+        
+        // depending on your clockwise / winding order, you might want to reverse the e2 / e1 above if your normals are flipped.
+        
+        mesh.getNormals()[ia] += no;
+        mesh.getNormals()[ib] += no;
+        mesh.getNormals()[ic] += no;
+    }
+    
+    if (bNormalize){
+        for( int i=0; i < mesh.getVertices().size(); i++ ) mesh.getNormals()[i].scale(interactionZoneHeight);
+        
+    }
 }
 
 //--------------------------------------------------------------
@@ -421,111 +596,6 @@ void ofApp::mouseReleased(int x, int y, int button)
         }
     }
     
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::buildInteractionZone(){
-    
-    // create bottom mesh
-    interactionZone.addVertex(workspace[0]);
-    interactionZone.addVertex(workspace[1]);
-    interactionZone.addVertex(workspace[2]);
-    interactionZone.addVertex(workspace[3]);
-    
-    interactionZone.addIndex(0);
-    interactionZone.addIndex(1);
-    interactionZone.addIndex(2);
-    
-    interactionZone.addIndex(0);
-    interactionZone.addIndex(2);
-    interactionZone.addIndex(3);
-    
-    // set the bottom normals
-    calcNormals(interactionZone, true);
-    
-    // create the top mesh
-    interactionZone.addVertex(workspace[0] + interactionZone.getNormals()[0]); // 4
-    interactionZone.addVertex(workspace[1] + interactionZone.getNormals()[1]); // 5
-    interactionZone.addVertex(workspace[2] + interactionZone.getNormals()[2]); // 6
-    interactionZone.addVertex(workspace[3] + interactionZone.getNormals()[3]); // 7
-    
-    interactionZone.addIndex(4);
-    interactionZone.addIndex(5);
-    interactionZone.addIndex(6);
-    
-    interactionZone.addIndex(4);
-    interactionZone.addIndex(6);
-    interactionZone.addIndex(7);
-    
-    // create left side
-    interactionZone.addIndex(0);
-    interactionZone.addIndex(4);
-    interactionZone.addIndex(5);
-    
-    interactionZone.addIndex(0);
-    interactionZone.addIndex(5);
-    interactionZone.addIndex(1);
-    
-    // create front side
-    interactionZone.addIndex(1);
-    interactionZone.addIndex(5);
-    interactionZone.addIndex(6);
-    
-    interactionZone.addIndex(1);
-    interactionZone.addIndex(6);
-    interactionZone.addIndex(2);
-    
-    // create right side
-    interactionZone.addIndex(2);
-    interactionZone.addIndex(6);
-    interactionZone.addIndex(7);
-    
-    interactionZone.addIndex(2);
-    interactionZone.addIndex(7);
-    interactionZone.addIndex(3);
-    
-    // create rear side
-    interactionZone.addIndex(3);
-    interactionZone.addIndex(7);
-    interactionZone.addIndex(4);
-    
-    interactionZone.addIndex(3);
-    interactionZone.addIndex(4);
-    interactionZone.addIndex(0);
-
-    
-}
-
-//--------------------------------------------------------------------------
-void ofApp::calcNormals( ofMesh & mesh, bool bNormalize ){
-    
-    for( int i=0; i < mesh.getVertices().size(); i++ ) mesh.addNormal(ofPoint(0,0,0));
-    
-    for( int i=0; i < mesh.getIndices().size(); i+=3 ){
-        const int ia = mesh.getIndices()[i];
-        const int ib = mesh.getIndices()[i+1];
-        const int ic = mesh.getIndices()[i+2];
-        
-        ofVec3f e1 = mesh.getVertices()[ia] - mesh.getVertices()[ib];
-        ofVec3f e2 = mesh.getVertices()[ic] - mesh.getVertices()[ib];
-        ofVec3f no = e2.cross( e1 );
-        
-        // depending on your clockwise / winding order, you might want to reverse the e2 / e1 above if your normals are flipped.
-        
-        mesh.getNormals()[ia] += no;
-        mesh.getNormals()[ib] += no;
-        mesh.getNormals()[ic] += no;
-    }
-    
-    if (bNormalize){
-        for( int i=0; i < mesh.getVertices().size(); i++ ) mesh.getNormals()[i].scale(interactionZoneHeight);
-
-    }
-}
-
-//--------------------------------------------------------------
-void ofApp::updateInteractionZone(float height){
     
 }
 

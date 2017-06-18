@@ -81,6 +81,15 @@ public:
     ofMesh interactionZone;
     void buildInteractionZone();
     void calcNormals( ofMesh & mesh, bool bNormalize );
-    void updateInteractionZone(float height);
-    ofParameter<float> interactionZoneHeight = 50;
+
+    ofParameter<float> interactionZoneHeight=50;
+    void updateInteractionZone(float &height);
+    
+    ofVec3f baseCentroid;
+    ofParameter<float> zOffset=0;
+    void updateZOffset(float &offset);
+    float prevOffset;
+    
+    ofVec3f topCentroid;
+    ofVec3f btmCentroid;
 };
