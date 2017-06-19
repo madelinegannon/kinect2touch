@@ -1,7 +1,9 @@
 ofxAssimpModelLoader
+ofxConvexHull
 ofxCv
 ofxGui
 ofxIntersection
 ofxKinect
 ofxOpenCv
+ofxRay
 ofxXmlSettings

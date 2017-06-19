@@ -171,6 +171,278 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>EBB4D2E3FEEABBD34EED9AED</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxRay.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>0DE82F34CE3C7E76904AEB80</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Ray.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay/Ray.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>028A1A54F7661FB669A7DFF8</key>
+			<dict>
+				<key>fileRef</key>
+				<string>4ACD81C4476FF24E4A29315D</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>4ACD81C4476FF24E4A29315D</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Ray.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay/Ray.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>C2521BB676B6430F84A0C207</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Projector.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay/Projector.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>DE51E964916E52B1AB50BB5F</key>
+			<dict>
+				<key>fileRef</key>
+				<string>13120E09450F7293A154AEE1</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>13120E09450F7293A154AEE1</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Projector.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay/Projector.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>48EAD5BB30F65697CD45CF41</key>
+			<dict>
+				<key>fileRef</key>
+				<string>BE7DD7C677E1852F7CCCC56B</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>BE7DD7C677E1852F7CCCC56B</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Plane_fitToPoints.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay/Plane_fitToPoints.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>8A33FB6F77F652E8E0672EDA</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Plane.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay/Plane.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>9ABE161F13B1E8B87B7C04F9</key>
+			<dict>
+				<key>fileRef</key>
+				<string>BF0F4A067A58EA2F68D32147</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>BF0F4A067A58EA2F68D32147</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Plane.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay/Plane.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>B706AAA9B8DAF8011F3D1B7E</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Camera.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay/Camera.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>DF2B08505F60BABD6D71FD96</key>
+			<dict>
+				<key>fileRef</key>
+				<string>DFCFA436686AD2091F124269</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>DFCFA436686AD2091F124269</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Camera.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay/Camera.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>F66B2DED74BA1679711E7B44</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Base.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay/Base.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>9C17F021207A6045CD0BF314</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>F822BE6973957EF1D983414B</string>
+					<string>F66B2DED74BA1679711E7B44</string>
+					<string>DFCFA436686AD2091F124269</string>
+					<string>B706AAA9B8DAF8011F3D1B7E</string>
+					<string>BF0F4A067A58EA2F68D32147</string>
+					<string>8A33FB6F77F652E8E0672EDA</string>
+					<string>BE7DD7C677E1852F7CCCC56B</string>
+					<string>13120E09450F7293A154AEE1</string>
+					<string>C2521BB676B6430F84A0C207</string>
+					<string>4ACD81C4476FF24E4A29315D</string>
+					<string>0DE82F34CE3C7E76904AEB80</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxRay</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>ED0E467261294094B574DE9F</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>9C17F021207A6045CD0BF314</string>
+					<string>EBB4D2E3FEEABBD34EED9AED</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>C882B4798A3582410D94BAC0</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>ED0E467261294094B574DE9F</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxRay</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>A0C1C42F6293BEC48CA02D5D</key>
+			<dict>
+				<key>fileRef</key>
+				<string>F822BE6973957EF1D983414B</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>F822BE6973957EF1D983414B</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Base.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxRay/src/ofxRay/Base.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>9A807ED85FFB53D3638FCBE0</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -5119,6 +5391,70 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>708506685E208ED72A106BEB</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxConvexHull.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxConvexHull/src/ofxConvexHull.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>B53DDEAF44ABF773AAF94F72</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>09D3879BC495A265F634CAA1</string>
+					<string>708506685E208ED72A106BEB</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>DE506EE4DBD0F85DCBC122A7</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>B53DDEAF44ABF773AAF94F72</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxConvexHull</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>30096043EFA27743B8DA07CE</key>
+			<dict>
+				<key>fileRef</key>
+				<string>09D3879BC495A265F634CAA1</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>09D3879BC495A265F634CAA1</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxConvexHull.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxConvexHull/src/ofxConvexHull.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>9FECF0FCF0CCAEC9C58FE54F</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -5957,6 +6293,43 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>F0A99749703D6EC7CC5EE158</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>CalibrateCoords.h</string>
+				<key>path</key>
+				<string>src/CalibrateCoords.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>D1FC6A46F42FC5F15FFC6FE3</key>
+			<dict>
+				<key>fileRef</key>
+				<string>43935654C4F20AD54C20D443</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>43935654C4F20AD54C20D443</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>CalibrateCoords.cpp</string>
+				<key>path</key>
+				<string>src/CalibrateCoords.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>6948EE371B920CB800B5AC1A</key>
 			<dict>
 				<key>children</key>
@@ -5973,11 +6346,13 @@
 				<key>children</key>
 				<array>
 					<string>2C8F245ACBE61E28646C17F2</string>
+					<string>DE506EE4DBD0F85DCBC122A7</string>
 					<string>6025FAF6414C2CA589764D26</string>
 					<string>480A780D8D0308AE4A368801</string>
 					<string>965DCABEA2C4DE1B6BDF53FA</string>
 					<string>9683228C705CA3FF4F2EA945</string>
 					<string>A0B90D3B0ADB9C1716816714</string>
+					<string>C882B4798A3582410D94BAC0</string>
 					<string>1F4FB5C423662B96ADFDCC0B</string>
 				</array>
 				<key>isa</key>
@@ -6139,6 +6514,7 @@
 					<key>HEADER_SEARCH_PATHS</key>
 					<array>
 						<string>$(OF_CORE_HEADERS)</string>
+						<string>src</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/include</string>
@@ -6149,6 +6525,7 @@
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/license</string>
 						<string>../../../addons/ofxAssimpModelLoader/src</string>
+						<string>../../../addons/ofxConvexHull/src</string>
 						<string>../../../addons/ofxCv/libs/ofxCv/include</string>
 						<string>../../../addons/ofxCv/libs/CLD/include/CLD</string>
 						<string>../../../addons/ofxCv/src</string>
@@ -6198,6 +6575,8 @@
 						<string>../../../addons/ofxOpenCv/libs/opencv/lib/osx</string>
 						<string>../../../addons/ofxOpenCv/libs/opencv/license</string>
 						<string>../../../addons/ofxOpenCv/src</string>
+						<string>../../../addons/ofxRay/src</string>
+						<string>../../../addons/ofxRay/src/ofxRay</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -6264,6 +6643,7 @@
 					<key>HEADER_SEARCH_PATHS</key>
 					<array>
 						<string>$(OF_CORE_HEADERS)</string>
+						<string>src</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/include</string>
@@ -6274,6 +6654,7 @@
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/license</string>
 						<string>../../../addons/ofxAssimpModelLoader/src</string>
+						<string>../../../addons/ofxConvexHull/src</string>
 						<string>../../../addons/ofxCv/libs/ofxCv/include</string>
 						<string>../../../addons/ofxCv/libs/CLD/include/CLD</string>
 						<string>../../../addons/ofxCv/src</string>
@@ -6323,6 +6704,8 @@
 						<string>../../../addons/ofxOpenCv/libs/opencv/lib/osx</string>
 						<string>../../../addons/ofxOpenCv/libs/opencv/license</string>
 						<string>../../../addons/ofxOpenCv/src</string>
+						<string>../../../addons/ofxRay/src</string>
+						<string>../../../addons/ofxRay/src/ofxRay</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -6381,10 +6764,12 @@
 				<array>
 					<string>E4B69E200A3A1BDC003C02F2</string>
 					<string>E4B69E210A3A1BDC003C02F2</string>
+					<string>D1FC6A46F42FC5F15FFC6FE3</string>
 					<string>3B8120368B4FCCD80883BAF3</string>
 					<string>483FA4F6D5FA6422C559B1F5</string>
 					<string>8DED5056525646FA71980866</string>
 					<string>B8846EF8E504895A4A9EFEC0</string>
+					<string>30096043EFA27743B8DA07CE</string>
 					<string>B6840996567E78436F7ECFAB</string>
 					<string>F76B4A79BD8DE4854141CB47</string>
 					<string>EBCDE831EFAE08274E799C97</string>
@@ -6425,6 +6810,12 @@
 					<string>E212C821D1064B92DD953A42</string>
 					<string>63020F16C7E8DED980111241</string>
 					<string>D3301F6A0B43BB293ED97C1D</string>
+					<string>A0C1C42F6293BEC48CA02D5D</string>
+					<string>DF2B08505F60BABD6D71FD96</string>
+					<string>9ABE161F13B1E8B87B7C04F9</string>
+					<string>48EAD5BB30F65697CD45CF41</string>
+					<string>DE51E964916E52B1AB50BB5F</string>
+					<string>028A1A54F7661FB669A7DFF8</string>
 					<string>63B57AC5BF4EF088491E0317</string>
 					<string>933A2227713C720CEFF80FD9</string>
 					<string>9D44DC88EF9E7991B4A09951</string>
@@ -6519,6 +6910,7 @@
 					<key>HEADER_SEARCH_PATHS</key>
 					<array>
 						<string>$(OF_CORE_HEADERS)</string>
+						<string>src</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/include</string>
@@ -6529,6 +6921,7 @@
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/license</string>
 						<string>../../../addons/ofxAssimpModelLoader/src</string>
+						<string>../../../addons/ofxConvexHull/src</string>
 						<string>../../../addons/ofxCv/libs/ofxCv/include</string>
 						<string>../../../addons/ofxCv/libs/CLD/include/CLD</string>
 						<string>../../../addons/ofxCv/src</string>
@@ -6578,6 +6971,8 @@
 						<string>../../../addons/ofxOpenCv/libs/opencv/lib/osx</string>
 						<string>../../../addons/ofxOpenCv/libs/opencv/license</string>
 						<string>../../../addons/ofxOpenCv/src</string>
+						<string>../../../addons/ofxRay/src</string>
+						<string>../../../addons/ofxRay/src/ofxRay</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -6634,6 +7029,7 @@
 					<key>HEADER_SEARCH_PATHS</key>
 					<array>
 						<string>$(OF_CORE_HEADERS)</string>
+						<string>src</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/include</string>
@@ -6644,6 +7040,7 @@
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx</string>
 						<string>../../../addons/ofxAssimpModelLoader/libs/assimp/license</string>
 						<string>../../../addons/ofxAssimpModelLoader/src</string>
+						<string>../../../addons/ofxConvexHull/src</string>
 						<string>../../../addons/ofxCv/libs/ofxCv/include</string>
 						<string>../../../addons/ofxCv/libs/CLD/include/CLD</string>
 						<string>../../../addons/ofxCv/src</string>
@@ -6693,6 +7090,8 @@
 						<string>../../../addons/ofxOpenCv/libs/opencv/lib/osx</string>
 						<string>../../../addons/ofxOpenCv/libs/opencv/license</string>
 						<string>../../../addons/ofxOpenCv/src</string>
+						<string>../../../addons/ofxRay/src</string>
+						<string>../../../addons/ofxRay/src/ofxRay</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -6740,6 +7139,8 @@
 					<string>E4B69E1D0A3A1BDC003C02F2</string>
 					<string>E4B69E1E0A3A1BDC003C02F2</string>
 					<string>E4B69E1F0A3A1BDC003C02F2</string>
+					<string>43935654C4F20AD54C20D443</string>
+					<string>F0A99749703D6EC7CC5EE158</string>
 				</array>
 				<key>isa</key>
 				<string>PBXGroup</string>

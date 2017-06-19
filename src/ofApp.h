@@ -4,6 +4,9 @@
 #include "ofxOpenCv.h"
 #include "ofxKinect.h"
 #include "ofxGui.h"
+#include "ofxConvexHull.h"
+#include "ofxXmlSettings.h"
+#include "CalibrateCoords.h"
 
 // Windows users:
 // You MUST install the libfreenect kinect drivers in order to be able to use
@@ -31,8 +34,10 @@ public:
 	void draw();
 	void exit();
     
-    ofxPanel panel;
-    ofParameterGroup params;
+    ofxPanel panelTouch;
+    ofParameterGroup paramsTouch;
+    ofxPanel panelCV;
+    ofParameterGroup paramsCV;
     void setupGUI();
 	
 	void drawPointCloud();
@@ -58,18 +63,27 @@ public:
 	ofxCvGrayscaleImage grayThreshFar; // the far thresholded image
 	
 	ofxCvContourFinder contourFinder;
+    ofxConvexHull convexHull;
+//    vector<ofPoint> points;
+    vector<ofPoint> hull;
 	
 	bool bThreshWithOpenCV;
 	bool bDrawPointCloud;
 	
-	int nearThreshold;
-	int farThreshold;
+	ofParameter<int> nearThreshold;
+	ofParameter<int> farThreshold;
+    ofParameter<int> minArea;
+    ofParameter<int> maxArea;
 	
 	int angle;
 	
 	// used for viewing the point cloud
 	ofEasyCam easyCam;
     
+    ////////////////////////////////////////////////
+    ///////////////// 2D WORKSPACE /////////////////
+    
+    // set workspace
     bool isWorkspaceDefined = false;
     vector<ofVec3f> workspace; // list of four points that make up the workspace edges
     ofPolyline workspacePlane;
@@ -78,6 +92,7 @@ public:
     void drawWorkspace(bool threeD);
     void drawInteractionZone();
     
+    // define interaction zone
     ofMesh interactionZone;
     void buildInteractionZone();
     void calcNormals( ofMesh & mesh, bool bNormalize );
@@ -85,6 +100,7 @@ public:
     ofParameter<float> interactionZoneHeight=50;
     void updateInteractionZone(float &height);
     
+    // adjust interaction zone
     ofVec3f baseCentroid;
     ofParameter<float> zOffset=0;
     void updateZOffset(float &offset);
@@ -92,4 +108,35 @@ public:
     
     ofVec3f topCentroid;
     ofVec3f btmCentroid;
+    
+    ////////////////////////////////////////////////
+    
+    ////////////////////////////////////////////////
+    ///////////////////// TOUCH ////////////////////
+
+    bool hasTouch = false;
+    vector<int> touchIndices;
+    
+    void checkForTouch();
+    
+    
+    CalibrateCoords calibration;
+    bool useCalibrated = true;
+    bool isCalibrated = false;
+    ofVec3f fingerPt;
+    ofVec3f fingerPt2D;
+    int calibCount = 0;
+    
+    vector<ofVec2f> imagePoints;
+    vector<ofVec3f> worldPoints;
+    
+    ofFile imagePts;
+    ofFile worldPts;
+    
+    ////////////////////////////////////////////////
+    
+    
+    bool bDrawProjector = false;
+
+    void readCalibrationFiles(string image, string world);
 };

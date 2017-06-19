@@ -1,0 +1,7 @@
+<CV_Parameters>
+	<Near_Threshold>255</Near_Threshold>
+	<Far_Threshold>234</Far_Threshold>
+	<Min_Area>1500</Min_Area>
+	<Max_Area>15000</Max_Area>
+<CV_Parameters/>
+</CV_Parameters>

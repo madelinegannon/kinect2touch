@@ -1,5 +1,6 @@
 #include "ofApp.h"
 
+
 /*
     If you are struggling to get the device to connect ( especially Windows Users )
     please look at the ReadMe: in addons/ofxKinect/README.md
@@ -54,6 +55,14 @@ void ofApp::setup() {
     interactionZone.enableNormals();
     
     setupGUI();
+    
+    if (useCalibrated){
+        readCalibrationFiles("imagePts.txt", "worldPts.txt");
+        calibration.setup( 1024, 768); //  cameraWidth		= 1024; cameraHeight	= 768;
+        calibration.loadPoints(imagePoints, worldPoints);
+        calibration.correctCamera();
+        
+    }
 }
 
 //--------------------------------------------------------------
@@ -64,7 +73,6 @@ void ofApp::update() {
 	kinect.update();
     
     
-	
 	// there is a new frame and we are connected
 	if(kinect.isFrameNew()) {
 		
@@ -98,7 +106,41 @@ void ofApp::update() {
 		
 		// find contours which are between the size of 20 pixels and 1/3 the w*h pixels.
 		// also, find holes is set to true so we will get interior contours as well....
-		contourFinder.findContours(grayImage, 10, (kinect.width*kinect.height)/2, 20, false);
+		contourFinder.findContours(grayImage, minArea, maxArea, 20, false);
+        
+        // update finger point
+        if (contourFinder.nBlobs > 0){
+            
+            hull = convexHull.getConvexHull(contourFinder.blobs[0].pts);
+
+            // remove duplicate points
+            vector<ofPoint> temp;
+            for (int i=0; i<hull.size()-1; i++){
+                
+                auto pt00 = hull[i];
+                auto pt01 = hull[i+1];
+                
+                float dist = 15;
+                if (pt00.squareDistance(pt01) > dist*dist){
+                    temp.push_back(pt00);
+                    i++;
+                }
+            }
+            
+            hull = temp;
+            
+            // assign finger point
+            fingerPt2D = hull[1];
+            fingerPt = kinect.getWorldCoordinateAt(fingerPt2D.x, fingerPt2D.y);
+            
+        }
+        
+        
+        checkForTouch();
+        
+        
+        
+        
 	}
 	
 #ifdef USE_TWO_KINECTS
@@ -122,18 +164,80 @@ void ofApp::draw() {
         
         
 		easyCam.end();
-	} else {
+    }else if (bDrawProjector){
+        
+        ofPushStyle();
+        ofBackground(0);
+        
+        // draw mouse cross hairs
+        ofSetLineWidth(5);
+        ofSetColor(ofColor::white);
+        ofDrawLine(mouseX, 0, mouseX, ofGetHeight());
+        ofDrawLine(0, mouseY, ofGetWidth(), mouseY);
+        ofSetColor(ofColor::aqua);
+        ofDrawCircle(mouseX, mouseY, 8);
+        ofSetColor(ofColor::white);
+        ofDrawCircle(mouseX, mouseY, 3);
+        
+        // draw text feedback
+        stringstream ss;
+        ss << "Sceen Pt: {" << ofToString(mouseX) << ", " << ofToString(mouseY) << "}\n" <<
+            "World Pt: {" << ofToString(fingerPt) << "}\n\n" <<
+            "Calibration Point Count: " << calibCount
+        ;
+        
+        ofDrawBitmapString(ss.str(), 10, 10);
+        
+        ofPopStyle();
+        
+    }
+    else {
 		// draw from the live kinect
 		kinect.drawDepth(10, 10, kinect.width, kinect.height);
         
         // draw the 2D workspace
         drawWorkspace(false);
         
+        if(hasTouch){
+            ofPushMatrix();
+//            ofPushStyle();
+            ofTranslate(10,10);
+            for (auto &index : touchIndices)
+                contourFinder.blobs[index].draw();
+//            ofPopStyle();
+            
+            ofPopMatrix();
+        }
+        
         
 		kinect.draw(kinect.width + 20, 10, kinect.width, kinect.height);
 		
 		grayImage.draw(kinect.width + 20, kinect.height + 20, kinect.width, kinect.height);
+        
+        
 		contourFinder.draw(kinect.width + 20, kinect.height + 20, kinect.width, kinect.height);
+        
+        ofPushMatrix();
+        ofPushStyle();
+        ofNoFill();
+        ofSetLineWidth(3);
+        ofSetColor(ofColor::aqua);
+        ofTranslate(kinect.width + 20, kinect.height + 20);
+        ofBeginShape();
+        for (auto &pt : hull)
+            ofVertex(pt);
+        ofEndShape();
+        
+        ofSetColor(ofColor::white);
+        for (int i=0; i<hull.size(); i++){
+            ofDrawBitmapString(ofToString(i), hull[i].x + 5, hull[i].y + 5);
+        }
+        
+        ofSetColor(ofColor::magenta, 120);
+        ofDrawCircle(fingerPt2D, 10);
+   
+        ofPopStyle();
+        ofPopMatrix();
 		
 #ifdef USE_TWO_KINECTS
 		kinect2.draw(420, 320, 400, 300);
@@ -167,7 +271,10 @@ void ofApp::draw() {
     
 //	ofDrawBitmapString(reportStream.str(), 20, 652);
     
-    panel.draw();
+    if (!bDrawProjector){
+        panelTouch.draw();
+        panelCV.draw();
+    }
 }
 
 
@@ -175,20 +282,49 @@ void ofApp::draw() {
 void ofApp::setupGUI(){
     
     
-    params.setName("Touch Parameters");
-    params.add(interactionZoneHeight.set("Zone Height", 50, 1, 500));
-    params.add(zOffset.set("z Offset", 0, -50, 50));
-
+    paramsTouch.setName("3D Touch Parameters");
+    paramsTouch.add(interactionZoneHeight.set("Zone Height", 50, 1, 500));
+    paramsTouch.add(zOffset.set("z Offset", 0, -50, 50));
     
     interactionZoneHeight.addListener(this, &ofApp::updateInteractionZone);
     zOffset.addListener(this, &ofApp::updateZOffset);
     
-    panel.setup(params);
+    panelTouch.setDefaultWidth(500);
+    panelCV.setDefaultWidth(500);
     
-    panel.setPosition(10, ofGetHeight() - 200);
-    panel.setDefaultWidth(500);
+    panelTouch.setup(paramsTouch);
     
-    panel.loadFromFile("settings.xml");
+    panelTouch.setPosition(10, kinect.height + 20);
+    
+    
+    panelTouch.loadFromFile("settings_touch.xml");
+    
+    paramsCV.setName("CV Parameters");
+    paramsCV.add(nearThreshold.set("Near Threshold", 255, 0, 255));
+    paramsCV.add(farThreshold.set("Far Threshold", 234, 0, 255));
+    paramsCV.add(minArea.set("Min Area", 1500, 0, 1500));
+    paramsCV.add(maxArea.set("Max Area", 15000, 0, 50000));
+    
+    panelCV.setup(paramsCV);
+    panelCV.setPosition(10, panelTouch.getPosition().y + panelTouch.getHeight()+10);
+    
+    panelCV.loadFromFile("settings_cv.xml");
+}
+
+void ofApp::checkForTouch(){
+    
+    hasTouch = false;
+    touchIndices.clear();
+    for (int i=0; i< contourFinder.nBlobs; i++){
+        
+        if (workspacePlane2D.inside(contourFinder.blobs[i].centroid)){
+            hasTouch = true;
+            touchIndices.push_back(i);
+            
+        }
+        
+    }
+
     
 }
 
@@ -251,14 +387,7 @@ void ofApp::drawInteractionZone() {
     ofSetColor(0,255,255);
     
     interactionZone.drawWireframe();
-    for (int i=0; i<interactionZone.getNormals().size(); i++){
-        
-        ofSetColor(255,0,255);
-        
-        ofDrawLine(interactionZone.getVertices()[i], interactionZone.getVertices()[i]+interactionZone.getNormals()[i]);
-        
-//        cout << ofToString(n) << endl;
-    }
+    
     
     ofNoFill();
     ofDrawBox(topCentroid, 10);
@@ -266,6 +395,14 @@ void ofApp::drawInteractionZone() {
     
     ofSetColor(255,255,0);
     ofDrawBox(baseCentroid, 20);
+    
+    if (hasTouch){
+        ofFill();
+        for (auto &index : touchIndices){
+            ofPoint pt = contourFinder.blobs[index].centroid;
+            ofDrawBox(kinect.getWorldCoordinateAt(pt.x, pt.y), 10);
+        }
+    }
     
     ofDisableDepthTest();
     ofPopMatrix();
@@ -463,6 +600,9 @@ void ofApp::calcNormals( ofMesh & mesh, bool bNormalize ){
 void ofApp::exit() {
 	kinect.setCameraTiltAngle(0); // zero the tilt on exit
 	kinect.close();
+    
+    panelCV.saveToFile("settings_cv.xml");
+    panelTouch.saveToFile("settings_touch.xml");
 	
 #ifdef USE_TWO_KINECTS
 	kinect2.close();
@@ -473,8 +613,11 @@ void ofApp::exit() {
 void ofApp::keyPressed (int key) {
 	switch (key) {
 		case ' ':
-			bThreshWithOpenCV = !bThreshWithOpenCV;
-			break;
+			//bThreshWithOpenCV = !bThreshWithOpenCV;
+            
+            bDrawProjector = !bDrawProjector;
+            ofSetFullscreen(bDrawProjector);
+            break;
 			
 		case'p':
 			bDrawPointCloud = !bDrawPointCloud;
@@ -572,13 +715,48 @@ void ofApp::mouseDragged(int x, int y, int button)
 void ofApp::mousePressed(int x, int y, int button)
 {
 
+    
+    if (!isCalibrated){
+        imagePoints.push_back(ofVec2f(mouseX,mouseY));
+        worldPoints.push_back(ofVec3f(fingerPt.x,fingerPt.y,fingerPt.z));
+        calibCount++;
+        
+        // save out file
+        if (calibCount == 40){
+            
+            
+            imagePts.open("imagePts.txt",ofFile::WriteOnly);
+            worldPts.open("worldPts.txt",ofFile::WriteOnly);
+            
+            for (int i=0; i<calibCount; i++){
+                
+                imagePts << ofToString(imagePoints[i].x) << ", " << ofToString(imagePoints[i].y) << endl;
+                
+                worldPts << ofToString(worldPoints[i].x) << ", " << ofToString(worldPoints[i].y) << ", " << ofToString(worldPoints[i].z) << endl;
+            
+            }
+
+            imagePts.close();
+            worldPts.close();
+            
+            isCalibrated = true;
+            
+            bDrawProjector = false;
+            ofSetFullscreen(false);
+        }
+    }
+    
+    
+    
+    
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button)
 {
 
-    if (!isWorkspaceDefined){
+    if (!isWorkspaceDefined && isCalibrated){
         
         workspace.push_back(kinect.getWorldCoordinateAt(x-10, y-10));
         
@@ -613,4 +791,67 @@ void ofApp::mouseExited(int x, int y){
 void ofApp::windowResized(int w, int h)
 {
 
+}
+
+void ofApp::readCalibrationFiles(string image, string world){
+    
+    imagePoints.clear();
+    worldPoints.clear();
+   
+    // process the images points first
+    ofBuffer buffer = ofBufferFromFile(image);
+    
+    if(buffer.size()) {
+        
+        for (ofBuffer::Line it = buffer.getLines().begin(), end = buffer.getLines().end(); it != end; ++it) {
+            
+            string line = *it;
+            
+            // copy the line to draw later
+            // make sure its not a empty line
+            if(line.empty() == false) {
+                
+                float x = ofToFloat(ofSplitString(line, ", ")[0]);
+                float y = ofToFloat(ofSplitString(line, ", ")[1]);
+                
+                imagePoints.push_back(ofVec2f(x,y));
+
+                // print out the line
+                cout << "image point: " << line << endl;
+            }
+            
+            
+        }
+        
+    }
+    
+    // the process the world points
+    buffer = ofBufferFromFile(world);
+    
+    if(buffer.size()) {
+        
+        for (ofBuffer::Line it = buffer.getLines().begin(), end = buffer.getLines().end(); it != end; ++it) {
+            
+            string line = *it;
+            
+            // copy the line to draw later
+            // make sure its not a empty line
+            if(line.empty() == false) {
+                
+                float x = ofToFloat(ofSplitString(line, ", ")[0]);
+                float y = ofToFloat(ofSplitString(line, ", ")[1]);
+                float z = ofToFloat(ofSplitString(line, ", ")[2]);
+                
+                worldPoints.push_back(ofVec3f(x,y,z));
+
+                // print out the line
+                cout << "world point: " << line << endl;
+            }
+            
+            
+        }
+        
+    }
+    
+    isCalibrated = true;
 }
