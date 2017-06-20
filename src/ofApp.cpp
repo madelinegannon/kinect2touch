@@ -63,6 +63,24 @@ void ofApp::setup() {
         calibration.correctCamera();
         
     }
+    
+    if (!hasCornerPoints || !hasFingerPoints){
+        bDrawProjector = true;
+        ofSetFullscreen(true);
+    }
+    
+    
+    
+    // load fonts
+    
+    verdana30.load("verdana.ttf", 175, true, true);
+    verdana30.setLineHeight(135.0f);
+    verdana30.setLetterSpacing(1.035);
+    
+    verdana14.load("verdana.ttf", 32, true, true);
+    verdana14.setLineHeight(38);
+    verdana14.setLetterSpacing(1.035);
+    
 }
 
 //--------------------------------------------------------------
@@ -139,9 +157,10 @@ void ofApp::update() {
         checkForTouch();
         
         
-        
-        
 	}
+    
+    mouse.x = mouseX;
+    mouse.y = mouseY;
 	
 #ifdef USE_TWO_KINECTS
 	kinect2.update();
@@ -168,6 +187,52 @@ void ofApp::draw() {
         
         ofPushStyle();
         ofBackground(0);
+        
+        // draw corner points
+//        if (hasCornerPoints){'
+        
+        if (showWarning){
+            
+            ofPushMatrix();
+            ofRotate(180);
+            ofTranslate(-centroid);
+            drawWarning();
+            ofPopMatrix();
+        }
+        else if (showEnergy){
+            ofPushMatrix();
+            ofRotate(-90);
+            ofTranslate(-centroid.y, centroid.x);
+            drawEnergy();
+            ofPopMatrix();
+            
+            drawFingers();
+        }
+        else{
+            ofSetLineWidth(5);
+            ofSetColor(ofColor::orangeRed);
+//            ofNoFill();
+            ofBeginShape();
+            for (auto &pt : cornerPts){
+                ofVertex(pt.x, pt.y);
+            }
+            ofEndShape(OF_CLOSE);
+            
+        
+            ofSetLineWidth(0);
+            ofFill();
+            for (auto &pt : cornerPts){
+                
+                ofSetColor(255);
+                ofDrawCircle(pt, 10);
+                
+                if (pt.squareDistance(mouse) < 25*25){
+                    ofSetColor(0,255,255,100);
+                    ofDrawCircle(pt, 25);
+                }
+            }
+
+        }
         
         // draw mouse cross hairs
         ofSetLineWidth(5);
@@ -277,6 +342,124 @@ void ofApp::draw() {
     }
 }
 
+//--------------------------------------------------------------
+void ofApp::drawWarning(){
+    
+    float alpha;
+    
+    alphaIncrement += .05;
+    
+    alpha = ofMap(sin(alphaIncrement),0,1,0,255);
+    
+    ofPushStyle();
+    ofSetColor(ofColor::yellow, alpha);
+    ofDrawCircle(0, 0, 100);
+    ofNoFill();
+    ofDrawCircle(0, 0, 100);
+    
+    ofSetColor(0);
+    verdana30.drawString("!", -45, 85);
+    
+    ofPopStyle();
+    
+}
+
+//--------------------------------------------------------------
+void ofApp::drawEnergy(){
+    
+    float alpha;
+    
+    alphaIncrement += .005;
+    
+    alpha = ofMap(sin(alphaIncrement),-1,1,0,101);
+    
+    string percent = ofToString(int(alpha)) + "%";
+    
+//    if (alpha < 4*255/4.0 && alpha > 3*255/4.0)
+//        percent = "100%";
+//    else if (alpha < 3*255/4.0 && alpha > 2*255/4.0)
+//        percent = " 75%";
+//    else if (alpha < 2*255/4.0 && alpha > 1*255/4.0)
+//        percent = " 50%";
+//    else
+//        percent = " 25%";
+    
+    ofPushStyle();
+    ofFill();
+    ofSetColor(ofColor::white);
+    int w = 150;
+    int h = w/2;
+    ofDrawRectangle(-w/2,-h/2, w,   h);
+    ofDrawRectangle(-3*w/7, -6*h/7, w/4, w/8);
+    ofDrawRectangle( w/6, -6*h/7, w/4, w/8);
+//    ofNoFill();
+//    ofDrawCircle(0, 0, 100);
+    
+    ofSetColor(0);
+    verdana14.drawString(percent, -w/2+15, w/8);
+
+    ofPopStyle();
+    
+    
+}
+
+void ofApp::drawFingers(){
+    
+    ofPushStyle();
+
+    // draw fingers
+    
+    int alpha = int(ofMap(sin(alphaIncrement),-1,1,0,100));
+    
+    int c = 0.0;
+    
+    ofFill();
+    for (auto &ptList : fingerPts){
+       
+        if (c != 0){
+            
+            int a = 255;
+            if (c == 1)
+                a = ofMap(alpha, 0, 25, 0, 255, true);
+            if ( c == 2)
+                a = ofMap(alpha, 0, 50, 0, 255, true);
+            if (c == 3)
+               a = ofMap(alpha, 0, 75, 0, 255, true);
+            if (c == 4)
+                a = ofMap(alpha, 0, 100, 0, 255, true);
+            
+            ofSetColor(ofColor::greenYellow, a);//alpha);
+            
+            ofBeginShape();
+            for (auto &pt : ptList)
+                ofVertex(pt.x,pt.y);
+            
+            ofEndShape(OF_CLOSE);
+        }
+        
+        c++;
+    }
+    
+    
+    
+    ofSetLineWidth(0);
+    ofFill();
+    for (auto &ptList : fingerPts){
+        for (auto &pt : ptList){
+            
+//            ofSetColor(255);
+//            ofDrawCircle(pt, 10);
+            float dist = 5;
+            if (pt.squareDistance(mouse) < dist*dist){
+                ofSetColor(0,255,255,100);
+                ofDrawCircle(pt, dist*2);
+            }
+        }
+    }
+    
+    ofPopStyle();
+
+}
 
 //--------------------------------------------------------------
 void ofApp::setupGUI(){
@@ -646,15 +829,22 @@ void ofApp::keyPressed (int key) {
 			if (nearThreshold < 0) nearThreshold = 0;
 			break;
 			
-		case 'w':
-			kinect.enableDepthNearValueWhite(!kinect.isDepthNearValueWhite());
-			break;
+//		case 'w':
+//			kinect.enableDepthNearValueWhite(!kinect.isDepthNearValueWhite());
+//			break;
 			
 		case 'o':
 			kinect.setCameraTiltAngle(angle); // go back to prev tilt
 			kinect.open();
 			break;
 			
+        case 'w':
+            showWarning = !showWarning;
+            break;
+        case 'e':
+            showEnergy = !showEnergy;
+            break;
+            
 //		case 'c':
 //			kinect.setCameraTiltAngle(0); // zero the tilt
 //			kinect.close();
@@ -708,13 +898,102 @@ void ofApp::keyPressed (int key) {
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button)
 {
-	
+    
+    if (hasCornerPoints){
+        
+        ofVec2f m;
+        m.x = x; m.y = y;
+        
+        float dist = 25;
+        centroid.set(0,0);
+        for (int i=0; i<cornerPts.size(); i++){
+            if (cornerPts[i].squareDistance(m) < dist*dist){
+                cornerPts[i].set(m);
+            }
+            centroid += cornerPts[i];
+        }
+        centroid /= cornerPts.size();
+    
+    }
+    if (showEnergy){
+        
+        ofVec2f m;
+        m.x = x; m.y = y;
+        
+        float dist = 10;
+        for (auto &ptList : fingerPts){
+            for (auto &pt : ptList){
+                if (pt.squareDistance(m) < dist*dist)
+                    pt.set(m);
+            }
+                
+        }
+        
+    }
+    
+
+
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button)
 {
 
+    if (!hasCornerPoints){
+        
+        cornerPts.push_back(ofVec2f(x,y));
+        
+    
+        if (cornerPts.size() == 4){
+            hasCornerPoints = true;
+            
+            centroid.set(0,0);
+            
+            for (int i=0; i<cornerPts.size(); i++) centroid += cornerPts[i];
+            centroid /= cornerPts.size();
+        }
+    }
+    
+    if (!hasFingerPoints){
+        
+        if (fingerPtCount % 4 == 0){
+            vector<ofVec2f> pts;
+            fingerPts.push_back(pts);
+        }
+        
+        cout << "number of fingers: " << ofToString(fingerPts.size()) << endl;
+        
+        ofVec2f pt;
+        pt.x = x;
+        pt.y = y;
+        
+        fingerPts[fingerPts.size()-1].push_back(pt);
+        cout << "number of points per finger: " << ofToString(fingerPts[fingerPts.size()-1].size()) << endl;
+        cout << "pt: " << ofToString(pt) << endl;
+        fingerPtCount ++;
+        
+        vector<ofVec2f> list = fingerPts[fingerPts.size()-1];
+        cout << "pt: " << ofToString(list[list.size()-1]) << endl;
+        
+        if (fingerPtCount == 5*4)
+            hasFingerPoints = true;
+    }
+    
+//    else if (hasCornerPoints){
+//        
+//        ofVec2f m;
+//        m.x = x; m.y = y;
+//        
+//        float dist = 25;
+//        for (int i=0; i<cornerPts.size(); i++){
+//            if (cornerPts[i].squareDistance(m) < dist*dist){
+//                cornerPts[i].set(m);
+//            }
+//        }
+//    }
+    
+    
     
     if (!isCalibrated){
         imagePoints.push_back(ofVec2f(mouseX,mouseY));

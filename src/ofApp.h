@@ -121,7 +121,7 @@ public:
     
     
     CalibrateCoords calibration;
-    bool useCalibrated = true;
+    bool useCalibrated = false;
     bool isCalibrated = false;
     ofVec3f fingerPt;
     ofVec3f fingerPt2D;
@@ -139,4 +139,31 @@ public:
     bool bDrawProjector = false;
 
     void readCalibrationFiles(string image, string world);
+    
+    // fake-ass mapping
+    
+    
+    ofVec2f mouse;
+    bool hasCornerPoints = false;
+    vector<ofVec2f> cornerPts;
+    ofVec2f centroid;
+    
+    vector<ofVec2f> lerpedRect;
+    void updateLerpedRect();
+    
+    bool showWarning = false;
+    void drawWarning();
+    
+    ofTrueTypeFont	verdana30;
+     ofTrueTypeFont	verdana14;
+    float alphaIncrement= .1;
+    
+    bool showEnergy = false;
+    void drawEnergy();
+    void drawFingers();
+    
+    bool hasFingerPoints = false;
+    vector<vector<ofVec2f>> fingerPts;
+    int fingerPtCount = 0;
+    
 };
